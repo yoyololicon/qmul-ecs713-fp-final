@@ -26,6 +26,7 @@ source-repository head
 library
   exposed-modules:
       Lib
+      LookUp
       Types
   other-modules:
       Paths_fp_final
@@ -37,6 +38,8 @@ library
   build-depends:
       base >=4.7 && <5
     , containers
+    , random
+    , random-shuffle
   default-language: Haskell2010
 
 executable fp-final-exe
@@ -52,6 +55,8 @@ executable fp-final-exe
       base >=4.7 && <5
     , containers
     , fp-final
+    , random
+    , random-shuffle
   default-language: Haskell2010
 
 test-suite fp-final-test
@@ -68,4 +73,6 @@ test-suite fp-final-test
       base >=4.7 && <5
     , containers
     , fp-final
+    , random
+    , random-shuffle
   default-language: Haskell2010
