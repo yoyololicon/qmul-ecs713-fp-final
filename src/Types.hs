@@ -9,6 +9,7 @@ module Types
     newUser,
     addMessages,
     readMessages,
+    userSummary,
   )
 where
 
@@ -60,3 +61,10 @@ readMessages chatBoxVar = do
       let messages' = take (readIdx box') (messages box')
       putMVar chatBoxVar ChatBox {messages = messages box', readIdx = 0}
       return messages'
+
+userSummary :: User -> IO String
+userSummary user = do
+  chatBoxes' <- mapM readMVar (chatBoxes user)
+  let numMsgs = sum $ map (length . messages) $ Map.elems chatBoxes'
+      numUnreads = sum $ map readIdx $ Map.elems chatBoxes'
+  return $ "User " ++ name user ++ " received " ++ show numMsgs ++ " messages and has " ++ show numUnreads ++ " unread messages."
