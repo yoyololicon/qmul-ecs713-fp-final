@@ -13,10 +13,10 @@ import Types
 receiverProcess :: Chan MessagePack -> ChatBoxes -> IO ()
 receiverProcess incomingMessages boxes = forever $ do
   msg <- readChan incomingMessages
-  let username = fromUser msg
+  let username = fromUser . msgDirection $ msg
       msgContent = content msg
       chatBox = boxes Map.! username
-  addMessages chatBox msgContent
+  addMessage chatBox msgContent
 
 userProcess :: User -> Chan MessagePack -> IO ()
 userProcess user sendChan = forever $ do
@@ -26,7 +26,7 @@ userProcess user sendChan = forever $ do
 
   _ <- readMessages (chatBoxes user Map.! randomUser)
   randomMsg <- randomMessage
-  writeChan sendChan MessagePack {content = randomMsg, fromUser = name user, toUser = randomUser}
+  writeChan sendChan MessagePack {content = randomMsg, msgDirection = (name user, randomUser)}
 
   -- msgs <- mapM readMessages (Map.elems $ chatBoxes user) >>= return . concat
 
@@ -45,7 +45,7 @@ run c maxNumMsg mainChan userChans = do
       return ()
     else do
       msg <- readChan mainChan
-      let username = toUser msg
+      let username = toUser . msgDirection $ msg
           chatBox = userChans Map.! username
       writeChan chatBox msg
       run (c + 1) maxNumMsg mainChan userChans
