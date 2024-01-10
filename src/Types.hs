@@ -64,7 +64,7 @@ data User = User
 
 newUser :: UserName -> [UserName] -> IO User
 newUser name names = do
-  namesWithoutMe <- return $ filter (/= name) names
+  let namesWithoutMe = filter (/= name) names
   chatBoxes <- mapM (\name' -> newMVar ChatBox {rcvMessages = [], sndMessages = [], myReadIdx = 0, theirReadIdx = 0} >>= \mvar -> return (name', mvar)) namesWithoutMe >>= return . Map.fromList
   return User {name = name, chatBoxes = chatBoxes}
 
@@ -121,5 +121,5 @@ userSummary user = do
   let numRcvMsgs = sum $ map (length . rcvMessages) $ Map.elems chatBoxes'
       numUnreads = sum $ map myReadIdx $ Map.elems chatBoxes'
       numSndMsgs = sum $ map (length . sndMessages) $ Map.elems chatBoxes'
-      numAcks = sum $ map theirReadIdx $ Map.elems chatBoxes'
+      numAcks = numSndMsgs - sum (map theirReadIdx $ Map.elems chatBoxes')
   return $ "User " ++ name user ++ " received " ++ show numRcvMsgs ++ " messages (" ++ show numUnreads ++ " unread) and sent " ++ show numSndMsgs ++ " messages (" ++ show numAcks ++ " has been read)."
