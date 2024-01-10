@@ -1,8 +1,14 @@
 module LookUp
   ( availableUserName,
     availableMessageContent,
+    generateUserNames,
+    randomMessage,
   )
 where
+
+import System.Random
+import System.Random.Shuffle
+import System.Random.Stateful (randomM)
 
 availableUserName :: [String]
 availableUserName =
@@ -40,3 +46,13 @@ availableMessageContent =
     "Good day",
     "Good luck"
   ]
+
+generateUserNames :: Int -> IO [String]
+generateUserNames n =
+  newStdGen >>= return . take n . shuffle' availableUserName (length availableUserName)
+
+randomMessage :: IO String
+randomMessage = do
+  gen <- newStdGen
+  let (randomMsgIdx, _) = randomR (0, length availableMessageContent - 1) gen :: (Int, StdGen)
+  return $ availableMessageContent !! randomMsgIdx
