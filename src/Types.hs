@@ -116,7 +116,7 @@ addMyMessage chatBoxVar msg = do
         theirReadIdx = theirReadIdx chatBox + 1
       }
 
--- | Update the read index of other user when they acknowledge messages
+-- | Decrease the number of unread messages of the other user by the given number
 theyAcknowledge :: MVar ChatBox -> Int -> IO ()
 theyAcknowledge chatBoxVar num = do
   chatBox <- takeMVar chatBoxVar
