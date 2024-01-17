@@ -6,11 +6,11 @@ import qualified Data.Map as Map
 import LookUp
 import System.Environment
 import System.IO
-import System.Random
+import System.Random (Random (randomR), StdGen, newStdGen)
 import System.Random.Shuffle
 import Types
 
-type TunnelPack = Either Ack MessagePack
+type TunnelPack = Either Ack Message
 
 getFromUser :: TunnelPack -> UserName
 getFromUser (Left ack) = fromUser . ackDirection $ ack
@@ -39,7 +39,7 @@ userProcess user sendChan = forever $ do
   msgs <- readMessages (chatBoxes user Map.! randomUser)
   writeChan sendChan (Left Ack {readNum = length msgs, ackDirection = (name user, randomUser)})
   randomMsg <- randomMessage
-  writeChan sendChan (Right MessagePack {content = randomMsg, msgDirection = (name user, randomUser)})
+  writeChan sendChan (Right Message {content = randomMsg, msgDirection = (name user, randomUser)})
   addMyMessage (chatBoxes user Map.! randomUser) randomMsg
 
   -- wait for a random time

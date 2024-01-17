@@ -8,7 +8,7 @@ module Types
     UserName,
     Direction,
     Ack (..),
-    MessagePack (..),
+    Message (..),
     Messages,
     ChatBox (..),
     ChatBoxes,
@@ -42,7 +42,7 @@ toUser :: (a, b) -> b
 toUser = snd
 
 -- | Data type for sending messages
-data MessagePack = MessagePack
+data Message = Message
   { -- | Message content
     content :: MessageContent,
     -- | Message direction
