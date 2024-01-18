@@ -29,3 +29,21 @@ User Trent received 14 messages (2 unread) and sent 12 messages (3 has been read
 User Peggy received 9 messages (9 unread) and sent 8 messages (4 has been read).
 User Bob received 9 messages (4 unread) and sent 10 messages (2 has been read).
 ```
+
+## Design
+
+```mermaid
+sequenceDiagram
+    loop
+        sender ->> main: message
+        main -->> main: n << n + 1
+        main ->> receiver: message
+        receiver -->> receiver: update chatbox
+        receiver ->> main: ack
+        main ->> sender: ack
+        sender -->> sender: update chatbox
+        critical n == max_n
+            main --x main: terminate
+        end
+    end
+```
