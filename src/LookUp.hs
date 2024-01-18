@@ -13,7 +13,6 @@ where
 
 import System.Random
 import System.Random.Shuffle
-import System.Random.Stateful (randomM)
 
 -- | List of available user names
 availableUserName :: [String]
