@@ -13,9 +13,10 @@ where
 
 import System.Random
 import System.Random.Shuffle
+import Types (MessageContent, UserName)
 
 -- | List of available user names
-availableUserName :: [String]
+availableUserName :: [UserName]
 availableUserName =
   [ "Alice",
     "Bob",
@@ -37,7 +38,7 @@ availableUserName =
   ]
 
 -- | List of available messages
-availableMessageContent :: [String]
+availableMessageContent :: [MessageContent]
 availableMessageContent =
   [ "Hello",
     "Hi",
@@ -56,13 +57,13 @@ availableMessageContent =
 -- |
 -- Given a number, generate that many random user names as a list.
 -- The number will be capped at the length of `availableUserName`.
-generateUserNames :: Int -> IO [String]
+generateUserNames :: Int -> IO [UserName]
 generateUserNames n =
   newStdGen >>= return . take n . shuffle' availableUserName (length availableUserName)
 
 -- |
 -- Generate a random message from `availableMessageContent`.
-randomMessage :: IO String
+randomMessage :: IO MessageContent
 randomMessage = do
   gen <- newStdGen
   let (randomMsgIdx, _) = randomR (0, length availableMessageContent - 1) gen :: (Int, StdGen)
