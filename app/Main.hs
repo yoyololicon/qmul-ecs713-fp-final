@@ -1,7 +1,7 @@
 module Main (main) where
 
 import Control.Concurrent
-import Control.Monad (forever)
+import Control.Monad (forever, when)
 import qualified Data.Map as Map
 import LookUp
 import System.Environment
@@ -52,8 +52,10 @@ userProcess user sendChan = forever $ do
 
   msgs <- readMessages (chatBoxes user Map.! randomUser)
   -- send an acknowledgement of the number of messages read
-  writeChan sendChan (Left Ack {readNum = length msgs, ackDirection = (name user, randomUser)})
-  -- send a random message to the main process
+  let len = length msgs
+  when (len > 0) $ writeChan sendChan (Left Ack {readNum = len, ackDirection = (name user, randomUser)})
+
+  -- send a random message
   randomMsg <- randomMessage
   writeChan sendChan (Right Message {content = randomMsg, msgDirection = (name user, randomUser)})
   -- add self message to the chat box
